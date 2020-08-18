@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const Login = require('./routes/login');
 const Register = require('./routes/register');
 const Driver = require('./routes/driver');
+const User = require('./routes/user');
 const cors = require('cors');
 
 
@@ -30,7 +31,7 @@ mongoose.connection.on("error", () => {
 app.use('/login', Login);
 app.use('/register', Register);
 app.use('/driver', Driver);
-
+app.user('/user', User);
 
 
 const PORT = process.env.PORT || 5000;
