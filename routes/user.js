@@ -14,3 +14,5 @@ router.post('/update_info', async (req, res) => {
         res.json({ sucess: 0, message: error })
     }
 })
+
+module.exports = router;
