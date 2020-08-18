@@ -4,6 +4,7 @@ const Login = require('./routes/login');
 const Register = require('./routes/register');
 const Driver = require('./routes/driver');
 const User = require('./routes/user');
+const Contact_us = require('./routes/contact_us');
 const cors = require('cors');
 
 
@@ -32,6 +33,7 @@ app.use('/login', Login);
 app.use('/register', Register);
 app.use('/driver', Driver);
 app.use('/user', User);
+app.use('/contact_us', Contact_us)
 
 
 const PORT = process.env.PORT || 5000;
