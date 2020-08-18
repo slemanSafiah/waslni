@@ -31,7 +31,7 @@ mongoose.connection.on("error", () => {
 app.use('/login', Login);
 app.use('/register', Register);
 app.use('/driver', Driver);
-app.user('/user', User);
+app.use('/user', User);
 
 
 const PORT = process.env.PORT || 5000;
