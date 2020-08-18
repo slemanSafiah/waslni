@@ -3,8 +3,12 @@ const mongoose = require('mongoose');
 const Login = require('./routes/login');
 const Register = require('./routes/register');
 const Driver = require('./routes/driver');
+const cors = require('cors');
+
 
 const app = express();
+
+app.use(cors())
 
 require('dotenv/config');
 

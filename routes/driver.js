@@ -18,9 +18,9 @@ router.post('/update_location', async (req, res) => {
 router.post('/update_info', async (req, res) => {
     try {
         const updated_driver = await Driver.updateOne(
-            {/*condition*/ },
+            { number: req.body.number },
             {
-                $set: { /* new values */ }
+                $set: { name: req.body.name, gender: req.body.gender, age: req.body.age }
             })
         res.json(updated_driver);
     } catch (error) {
