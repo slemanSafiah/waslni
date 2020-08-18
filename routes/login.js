@@ -3,8 +3,10 @@ const hash = require('bcryptjs');
 const Driver = require('../models/Driver');
 const User = require('../models/User');
 const jwt = require("jsonwebtoken");
-const JWT_SECRET = process.env.JWT_SECRET;
+const JWT_SECRET = "blahblah";
 const router = express.Router();
+
+
 
 router.post('/user', (req, res) => {
     User.findOne({ number: req.body.number })
@@ -17,10 +19,16 @@ router.post('/user', (req, res) => {
                     .then((domatch) => {
                         if (domatch) {
                             const token = jwt.sign({ _id: savesUser._id }, JWT_SECRET);
-                            res.status(200).json({ token: token });
+                            res.status(200).json({
+                                sucess: 1,
+                                token: token
+                            });
                         }
                         else {
-                            res.status(422).json({ error: 'invalid password or email' });
+                            res.status(422).json({
+                                sucess: 0,
+                                error: 'invalid password or email'
+                            });
                         }
                     });
             }
@@ -40,10 +48,10 @@ router.post('/driver', (req, res) => {
                     .then((domatch) => {
                         if (domatch) {
                             const token = jwt.sign({ _id: savesUser._id }, JWT_SECRET);
-                            res.status(200).json({ token: token });
+                            res.status(200).json({ sucess: 1, token: token });
                         }
                         else {
-                            res.status(422).json({ error: 'invalid password or email' });
+                            res.status(422).json({ sucess: 0, error: 'invalid password or email' });
                         }
                     });
             }

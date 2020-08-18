@@ -8,7 +8,7 @@ router.post('/user', (req, res) => {
     User.findOne({ number: req.body.number })
         .then((saved) => {
             if (saved) {
-                res.status(422).json({ error: "error" });
+                res.status(422).json({ sucess: 0, error: "error" });
             }
             else {
                 const salt = 12;
@@ -22,9 +22,9 @@ router.post('/user', (req, res) => {
                     })
                     try {
                         const savedUser = user.save()
-                        res.json(savedUser)
+                        res.json({ sucess: 1, data: savedUser });
                     } catch (error) {
-                        res.json({ message: error });
+                        res.json({ sucess: 0, message: error });
                     }
                 })
             }
@@ -36,7 +36,7 @@ router.post('/user', (req, res) => {
 router.post('/driver', (req, res) => {
     Driver.findOne({ number: req.body.number })
         .then((saved) => {
-            if (saved) res.status(422).json({ error: "error" });
+            if (saved) res.status(422).json({ sucess: 0, error: "error" });
             else {
                 const salt = 12;
                 hash.hash(req.body.password, salt).then((new_password) => {
@@ -49,9 +49,9 @@ router.post('/driver', (req, res) => {
                     })
                     try {
                         const savedDriver = driver.save()
-                        res.json(savedDriver)
+                        res.json({ sucess: 1, data: savedDriver })
                     } catch (error) {
-                        res.json({ message: error });
+                        res.json({ sucess: 0, message: error });
                     }
                 })
             }
