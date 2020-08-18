@@ -5,9 +5,9 @@ const Driver = require('../models/Driver');
 router.post('/update_location', async (req, res) => {
     try {
         const updated_driver = await Driver.updateOne(
-            { long: req.body.long, lat: req.body.lat },
+            { number: req.body.number },
             {
-                $set: { long: req.body.new_long, lat: req.body.new_lat }
+                $set: { long: req.body.long, lat: req.body.lat }
             })
         res.json({ sucess: 1, data: updated_driver });
     } catch (error) {

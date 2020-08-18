@@ -27,7 +27,7 @@ const driverSchema = mongoose.Schema({
     },
     is_available: {
         type: Boolean,
-        default: true
+        default: false
     },
     lat: {
         type: Number,
