@@ -7,9 +7,9 @@ const User = require('./routes/user');
 const Trip = require('./routes/trip');
 const Contact_us = require('./routes/contact_us');
 const cors = require('cors');
-const socket = require('socket.io');
+const socketIo = require('socket.io');
+const http = require('http');
 const app = express();
-
 
 app.use(cors());
 
@@ -17,11 +17,9 @@ require('dotenv/config');
 
 app.use(express.json());
 
-const server = app.listen(4444, function () {
-  console.log(`Listening on port 4444`);
-});
+const server = http.createServer(app);
 
-const io = socket(server);
+const io = socketIo(server);
 
 io.on('connection', (socket) => {
   console.log('a user connected');
