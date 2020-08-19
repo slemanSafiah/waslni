@@ -5,6 +5,8 @@ const Register = require('./routes/register');
 const Driver = require('./routes/driver');
 const User = require('./routes/user');
 const Trip = require('./routes/trip');
+const DriverM = require('./models/Driver');
+const UserM = require('./models/User');
 const Contact_us = require('./routes/contact_us');
 const cors = require('cors');
 const socketIo = require('socket.io');
@@ -25,6 +27,37 @@ io.on('connection', (socket) => {
   console.log('a user connected');
 
   socket.on('trip', (data) => {
+
+    Driver.findOne({ number: data.driver_number })
+      .then((savesDriver) => {
+        if (!savesDriver)
+          return res.status(422).json({ error: "invalid Driver" });
+        else {
+          User.findOne({ number: data.user_number })
+            .then((savesUser) => {
+              if (!savesUser)
+                return res.status(422).json({ error: "invalid User" });
+              else {
+                const trip = new Trip({
+                  driver_number: data.driver_number,
+                  user_number: data.user_number,
+                  source_lat: data.source_lat,
+                  source_long: data.source_long,
+                  dest_lat: data.dest_lat,
+                  dest_long: data.dest_long,
+                  date: data.date
+                });
+                try {
+                  const savedTrip = trip.save()
+                  res.json({ sucess: 1 })
+                } catch (error) {
+                  res.json({ sucess: 0, message: error });
+                }
+              }
+            })
+        }
+      })
+      .catch((err) => console.log(err));
     socket.emit('notification', 'abc');
   })
 
