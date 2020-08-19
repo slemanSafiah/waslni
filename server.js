@@ -4,13 +4,14 @@ const Login = require('./routes/login');
 const Register = require('./routes/register');
 const Driver = require('./routes/driver');
 const User = require('./routes/user');
+const Trip = require('./routes/trip');
 const Contact_us = require('./routes/contact_us');
 const cors = require('cors');
 
 
 const app = express();
 
-app.use(cors())
+app.use(cors());
 
 require('dotenv/config');
 
@@ -33,8 +34,8 @@ app.use('/login', Login);
 app.use('/register', Register);
 app.use('/driver', Driver);
 app.use('/user', User);
-app.use('/contact_us', Contact_us)
-
+app.use('/contact_us', Contact_us);
+app.use('/trip', Trip);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log("running on port 5000"));

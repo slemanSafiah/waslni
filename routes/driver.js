@@ -37,4 +37,17 @@ router.get('/get_available', async (req, res) => {
     }
 })
 
+router.post('/availabe_off', async (req, res) => {
+    try {
+        const updated_driver = await Driver.updateOne(
+            { number: req.body.number },
+            {
+                $set: { is_available: false }
+            })
+        res.json({ sucess: 1, data: updated_driver });
+    } catch (error) {
+        res.json({ sucess: 0, message: error })
+    }
+})
+
 module.exports = router;

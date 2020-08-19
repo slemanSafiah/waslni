@@ -6,34 +6,34 @@ const {
 } = mongoose.Schema.Types;
 
 const tripSchema = mongoose.Schema({
-    source_place: {
+    driver_number: {
         type: String,
         required: true,
     },
-    destination_place: {
+    user_number: {
         type: String,
         required: true,
     },
-    whole_destince: {
-        type: Number,
-        required: true,
-    },
-    price: {
+    source_lat: {
         type: String,
         required: true,
     },
-    is_finished: {
-        type: Boolean,
+    source_long: {
+        type: String,
         required: true,
     },
-    start: {
+    dest_lat: {
+        type: String,
+        required: true,
+    },
+    dest_long: {
+        type: String,
+        required: true,
+    },
+    date: {
         type: Date,
-        required: true,
-    },
-    end: {
-        type: Date,
-        required: true,
-    },
+        default: Date.now
+    }
 });
 
 const Trip = mongoose.model('Trip', tripSchema);
