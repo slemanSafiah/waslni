@@ -7,15 +7,34 @@ const User = require('./routes/user');
 const Trip = require('./routes/trip');
 const Contact_us = require('./routes/contact_us');
 const cors = require('cors');
-
-
+const socket = require('socket.io');
 const app = express();
+
 
 app.use(cors());
 
 require('dotenv/config');
 
 app.use(express.json());
+
+const server = app.listen(4444, function () {
+  console.log(`Listening on port 4444`);
+});
+
+const io = socket(server);
+
+io.on('connection', (socket) => {
+  console.log('a user connected');
+
+  socket.on('trip', (data) => {
+    socket.emit('notification', 'abc');
+  })
+
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+});
+
 
 mongoose.connect(
   process.env.DB_CONNECTION,
