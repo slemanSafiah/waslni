@@ -7,6 +7,7 @@ const User = require('./routes/user');
 const Trip = require('./routes/trip');
 const DriverM = require('./models/Driver');
 const UserM = require('./models/User');
+const TripM = require('./models/Trip');
 const Contact_us = require('./routes/contact_us');
 const cors = require('cors');
 const socketIo = require('socket.io');
@@ -28,17 +29,17 @@ io.on('connection', (socket) => {
 
   socket.on('trip', (data) => {
 
-    Driver.findOne({ number: data.driver_number })
+    DriverM.findOne({ number: data.driver_number })
       .then((savesDriver) => {
         if (!savesDriver)
           return res.status(422).json({ error: "invalid Driver" });
         else {
-          User.findOne({ number: data.user_number })
+          UserM.findOne({ number: data.user_number })
             .then((savesUser) => {
               if (!savesUser)
                 return res.status(422).json({ error: "invalid User" });
               else {
-                const trip = new Trip({
+                const trip = new TripM({
                   driver_number: data.driver_number,
                   user_number: data.user_number,
                   source_lat: data.source_lat,
