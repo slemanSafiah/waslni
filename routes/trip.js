@@ -6,7 +6,7 @@ const User = require('../models/User');
 
 router.post('/get_trips_by_driver', async (req, res) => {
     try {
-        const trips = await Trip.find({ driver_number: req.body.driver_number });
+        const trips = await Trip.find({ driver_number: req.body.number });
         res.json({ sucess: 1, data: trips });
     } catch (err) {
         res.json({ sucess: 0, message: err });
@@ -15,7 +15,7 @@ router.post('/get_trips_by_driver', async (req, res) => {
 
 router.post('/get_trips_by_user', async (req, res) => {
     try {
-        const trips = await Trip.find({ user_number: req.body.user_number });
+        const trips = await Trip.find({ user_number: req.body.number });
         res.json({ sucess: 1, data: trips });
     } catch (err) {
         res.json({ sucess: 0, message: err });
