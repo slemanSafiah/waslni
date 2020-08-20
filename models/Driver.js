@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const {
     Number,
-    Boolean
+    Boolean,
 } = mongoose.Schema.Types;
 
 const driverSchema = mongoose.Schema({

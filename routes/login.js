@@ -21,7 +21,8 @@ router.post('/user', (req, res) => {
                             const token = jwt.sign({ _id: savesUser._id }, JWT_SECRET);
                             res.status(200).json({
                                 sucess: 1,
-                                token: token
+                                token: token,
+                                name: savesUser.name
                             });
                         }
                         else {
@@ -48,7 +49,7 @@ router.post('/driver', (req, res) => {
                     .then((domatch) => {
                         if (domatch) {
                             const token = jwt.sign({ _id: savesUser._id }, JWT_SECRET);
-                            res.status(200).json({ sucess: 1, token: token });
+                            res.status(200).json({ sucess: 1, token: token, name: savesUser.name });
                         }
                         else {
                             res.status(422).json({ sucess: 0, error: 'invalid password or email' });

@@ -33,7 +33,6 @@ io.on("connection", (socket) => {
         if (savesDriver) {
           UserM.findOne({ number: data.user_number }).then((savesUser) => {
             if (savesUser) {
-              console.log(data);
               const trip = new TripM({
                 driver_number: data.driver_number,
                 user_number: data.user_number,
@@ -41,9 +40,11 @@ io.on("connection", (socket) => {
                 source_long: data.source_long,
                 dest_lat: data.dest_lat,
                 dest_long: data.dest_long,
+                date: Date.now()
               });
               try {
                 const savedTrip = trip.save();
+                savedTrip.then((saved) => console.log(saved))
                 //res.json({ sucess: 1 });
               } catch (error) {
                 //res.json({ sucess: 0, message: error });
