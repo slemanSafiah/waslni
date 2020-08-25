@@ -19,6 +19,7 @@ app.use(cors());
 require("dotenv/config");
 
 app.use(express.json());
+var users = new Map();
 
 const server = http.createServer(app);
 server.listen(4001);
@@ -57,8 +58,21 @@ io.on("connection", (socket) => {
     socket.emit("notification", "abc");
   });
 
-  socket.on("disconnect", () => {
+  socket.on('join', (number) => {
+    users.set(number, socket.id)
+    console.log(users);
+  })
+
+  socket.on('notification', (number, msg) => {
+    let d_id = users.get(number);
+    io.to(id).emit('notification', msg);
+  });
+
+  socket.on("disconnect", (number) => {
+    users.delete(number)
     console.log("user disconnected");
+    console.log(users);
+
   });
 });
 
