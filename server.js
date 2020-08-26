@@ -77,6 +77,7 @@ io.on("connection", (socket) => {
                   driver: data.driver,
                   client: data.client,
                   message: data.message,
+                  is_driver: data.isdriver,
                   date: Date.now()
                 });
                 try {
@@ -88,7 +89,6 @@ io.on("connection", (socket) => {
                     let u_id = users.get(data.client);
                     socket.to(u_id).emit('message', data.message);
                     console.log("iimmmmmmm")
-
                   } else {
                     let d_id = users.get(data.driver);
                     socket.to(d_id).emit('message', data.message);
