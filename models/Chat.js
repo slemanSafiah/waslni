@@ -6,11 +6,11 @@ const {
 } = mongoose.Schema.Types;
 
 const chatSchema = mongoose.Schema({
-    sender: {
+    client: {
         type: String,
         required: true
     },
-    reciver: {
+    driver: {
         type: String,
         required: true
     },
