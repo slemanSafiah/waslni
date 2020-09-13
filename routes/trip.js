@@ -3,56 +3,67 @@ const router = express.Router();
 const Trip = require('../models/Trip');
 const Driver = require('../models/Driver');
 const User = require('../models/User');
+const request = require('request');
+const http = require('https');
+const axios = require('axios');
+var ACCESS_TOKEN = "pk.eyJ1IjoidGFtYXJhamFtbW91bCIsImEiOiJja2NxMG1kNm8xMGtzMnNsbWExbGtpbm8zIn0.bgQ23ChS-u88zfS7dm6Fbw";
 
+
+var trps = [];
+var tr = {};
 router.post('/get_trips_by_driver', async (req, res) => {
     try {
-        const trips = await Trip.find({ driver_number: req.body.number });
-        res.json({ sucess: 1, data: trips });
+        const trips = await Trip.find({
+            driver_number: req.body.number
+        });
+        Promise.all(trips.map(item => {
+            return anAsyncFunction(item);
+        })).then(() => res.json({
+            sucess: 1,
+            data: trps
+        }));
+
     } catch (err) {
-        res.json({ sucess: 0, message: err });
+        console.log(err);
+        res.json({
+            sucess: 0,
+            message: err
+        });
     }
 })
 
 router.post('/get_trips_by_user', async (req, res) => {
     try {
-        const trips = await Trip.find({ user_number: req.body.number });
-        res.json({ sucess: 1, data: trips });
+        const trips = await Trip.find({
+            user_number: req.body.number
+        });
+        Promise.all(trips.map(item => {
+            return anAsyncFunction(item);
+        })).then(() => res.json({
+            sucess: 1,
+            data: trps
+        }));
     } catch (err) {
-        res.json({ sucess: 0, message: err });
+        res.json({
+            sucess: 0,
+            message: err
+        });
     }
 })
 
-// router.post('/add_trip', async (req, res) => {
-//     Driver.findOne({ number: req.body.driver_number })
-//         .then((savesDriver) => {
-//             if (!savesDriver)
-//                 return res.status(422).json({ error: "invalid Driver" });
-//             else {
-//                 User.findOne({ number: req.body.user_number })
-//                     .then((savesUser) => {
-//                         if (!savesUser)
-//                             return res.status(422).json({ error: "invalid User" });
-//                         else {
-//                             const trip = new Trip({
-//                                 driver_number: req.body.driver_number,
-//                                 user_number: req.body.user_number,
-//                                 source_lat: req.body.source_lat,
-//                                 source_long: req.body.source_long,
-//                                 dest_lat: req.body.dest_lat,
-//                                 dest_long: req.body.dest_long,
-//                                 date: req.body.date
-//                             });
-//                             try {
-//                                 const savedTrip = trip.save()
-//                                 res.json({ sucess: 1 })
-//                             } catch (error) {
-//                                 res.json({ sucess: 0, message: error });
-//                             }
-//                         }
-//                     })
-//             }
-//         })
-//         .catch((err) => console.log(err));
-// })
+
+const anAsyncFunction = async item => {
+
+    var b = await axios.get('https://api.mapbox.com/geocoding/v5/mapbox.places/' + item.source_long + ', ' + item.source_lat + '.json?access_token=' + ACCESS_TOKEN);
+    var a = await axios.get('https://api.mapbox.com/geocoding/v5/mapbox.places/' + item.dest_long + ', ' + item.dest_lat + '.json?access_token=' + ACCESS_TOKEN);
+    if (b.data.features.length != 0)
+        tr.from = b.data.features[0].place_name;
+    if (a.data.features.length != 0)
+        tr.to = a.data.features[0].place_name;
+    tr.driver_number = item.driver_number;
+    tr.user_number = item.user_number;
+    trps.push(tr);
+    return Promise.resolve('ok');
+}
 
 module.exports = router;

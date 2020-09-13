@@ -21,9 +21,6 @@ const chatSchema = mongoose.Schema({
     message: {
         type: String,
         required: true
-    },
-    is_driver: {
-        type: Boolean,
     }
 });
 

@@ -15,7 +15,6 @@ const cors = require("cors");
 const socketIo = require("socket.io");
 const http = require("http");
 const app = express();
-
 app.use(cors());
 
 require("dotenv/config");
@@ -31,10 +30,14 @@ io.on("connection", (socket) => {
   console.log("a user connected");
 
   socket.on("trip", (data) => {
-    DriverM.findOne({ number: data.driver_number })
+    DriverM.findOne({
+        number: data.driver_number
+      })
       .then((savesDriver) => {
         if (savesDriver) {
-          UserM.findOne({ number: data.user_number }).then((savesUser) => {
+          UserM.findOne({
+            number: data.user_number
+          }).then((savesUser) => {
             if (savesUser) {
               const trip = new TripM({
                 driver_number: data.driver_number,
@@ -43,15 +46,23 @@ io.on("connection", (socket) => {
                 source_long: data.source_long,
                 dest_lat: data.dest_lat,
                 dest_long: data.dest_long,
+                dest: data.dest,
                 date: Date.now()
               });
               try {
                 const savedTrip = trip.save();
                 savedTrip.then((saved) => console.log(saved));
                 let d_id = users.get(data.driver_number);
-                io.to(d_id).emit('notification', { client: data.user_number, source_lat: data.source_lat, source_long: data.source_long, dest_lat: data.dest_lat, dest_long: data.dest_long });
+                io.to(d_id).emit('notification', {
+                  client: data.user_number,
+                  source_lat: data.source_lat,
+                  source_long: data.source_long,
+                  dest_lat: data.dest_lat,
+                  dest_long: data.dest_long,
+                  dest: data.dest
+                });
                 console.log(`this is d_id : ${d_id} and driver number: ${data.driver_number}`);
-              } catch (error) { }
+              } catch (error) {}
             }
 
           });
@@ -67,39 +78,43 @@ io.on("connection", (socket) => {
 
   socket.on('message', (data) => {
     console.log(data);
-    DriverM.findOne({ number: data.driver })
+    DriverM.findOne({
+        number: data.driver
+      })
       .then((savesDriver) => {
         if (savesDriver) {
-          UserM.findOne({ number: data.client }).
-            then((savesUser) => {
-              if (savesUser) {
-                const chat = new ChatM({
-                  driver: data.driver,
-                  client: data.client,
-                  message: data.message,
-                  is_driver: data.isdriver,
-                  date: Date.now()
-                });
-                try {
-                  console.log(chat);
-                  const savedChat = chat.save();
-                  savedChat.then((saved) => console.log(saved));
-                  console.log(data.isdriver)
-                  if (data.isdriver) {
-                    let u_id = users.get(data.client);
-                    socket.to(u_id).emit('message', data.message);
-                    console.log("iimmmmmmm")
-                  } else {
-                    let d_id = users.get(data.driver);
-                    socket.to(d_id).emit('message', data.message);
-                    console.log("iiiiiiiiiii")
-                  }
-                } catch (error) {
-                  console.log(error);
-                }
-              }
+          UserM.findOne({
+            number: data.client
+          }).
+          then((savesUser) => {
+            if (savesUser) {
+              const chat = new ChatM({
+                driver: data.driver,
+                client: data.client,
+                message: data.message,
+                date: Date.now()
+              });
+              try {
+                console.log(chat);
+                const savedChat = chat.save();
+                savedChat.then((saved) => console.log(saved));
+                console.log(data.isdriver)
+                if (data.isdriver) {
+                  let u_id = users.get(data.client);
+                  socket.to(u_id).emit('message', data.message);
+                  console.log("iimmmmmmm")
 
-            });
+                } else {
+                  let d_id = users.get(data.driver);
+                  socket.to(d_id).emit('message', data.message);
+                  console.log("iiiiiiiiiii")
+                }
+              } catch (error) {
+                console.log(error);
+              }
+            }
+
+          });
         }
       })
       .catch((err) => console.log(err));
@@ -113,8 +128,7 @@ io.on("connection", (socket) => {
 });
 
 mongoose.connect(
-  process.env.DB_CONNECTION,
-  {
+  process.env.DB_CONNECTION, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   },
