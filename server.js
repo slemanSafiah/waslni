@@ -44,7 +44,7 @@ io.on("connection", (socket) => {
             number: data.user_number
           }).then((savesUser) => {
             if (savesUser) {
-
+	console.og(savedUser);
               const trip = new TripM({
                 driver_number: data.driver_number,
                 user_number: data.user_number,
