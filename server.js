@@ -44,49 +44,42 @@ io.on("connection", (socket) => {
             number: data.user_number
           }).then((savesUser) => {
             if (savesUser) {
-              DriverM.updateOne({
-                number: data.driver_number
-              }, {
-                  $set: {
-                    is_available: false
-                  }
-                }).then((updatedDriver) => {
-                  const trip = new TripM({
-                    driver_number: data.driver_number,
-                    user_number: data.user_number,
+
+              const trip = new TripM({
+                driver_number: data.driver_number,
+                user_number: data.user_number,
+                source_lat: data.source_lat,
+                source_long: data.source_long,
+                dest_lat: data.dest_lat,
+                dest_long: data.dest_long,
+                dest: data.dest,
+                date: Date.now()
+              });
+              try {
+                const savedTrip = trip.save();
+                savedTrip.then((saved) => console.log(saved));
+                let d_id = users.get(data.driver_number);
+                var trips = [data];
+                tr = {};
+                var a, b;
+                Promise.all(trips.map(item => {
+                  return anAsyncFunction(item);
+                })).then(() => {
+                  a = tr.from;
+                  b = tr.to;
+                }).then(() => {
+                  io.to(d_id).emit('notification', {
+                    client: data.user_number,
                     source_lat: data.source_lat,
                     source_long: data.source_long,
                     dest_lat: data.dest_lat,
                     dest_long: data.dest_long,
                     dest: data.dest,
-                    date: Date.now()
+                    from: a,
+                    to: b
                   });
-                  try {
-                    const savedTrip = trip.save();
-                    savedTrip.then((saved) => console.log(saved));
-                    let d_id = users.get(data.driver_number);
-                    var trips = [data];
-                    tr = {};
-                    var a, b;
-                    Promise.all(trips.map(item => {
-                      return anAsyncFunction(item);
-                    })).then(() => {
-                      a = tr.from;
-                      b = tr.to;
-                    }).then(() => {
-                      io.to(d_id).emit('notification', {
-                        client: data.user_number,
-                        source_lat: data.source_lat,
-                        source_long: data.source_long,
-                        dest_lat: data.dest_lat,
-                        dest_long: data.dest_long,
-                        dest: data.dest,
-                        from: a,
-                        to: b
-                      });
-                    })
-                  } catch (error) { }
-                });
+                })
+              } catch (error) { }
             }
           });
         }
